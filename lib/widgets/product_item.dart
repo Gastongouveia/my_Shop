@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:shop/views/product_detail_screen.dart';
-import '../models/product.dart';
+import 'package:provider/provider.dart';
+import '../providers/product.dart';
+import '../providers/cart.dart';
 import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product product;
-
-  ProductItem(this.product);
-
   @override
   Widget build(BuildContext context) {
+    final Product product = Provider.of<Product>(context, listen: false);
+    final Cart cart = Provider.of<Cart>(context, listen: false);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -27,17 +27,25 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(Icons.favorite),
-            color: Theme.of(context).accentColor,
-            onPressed: () {},
+          leading: Consumer<Product>(
+            builder: (ctx, product, _) => IconButton(
+              icon: Icon(
+                  product.isFavorite ? Icons.favorite : Icons.favorite_border),
+              color: Theme.of(context).accentColor,
+              onPressed: () {
+                product.toggleFavorite();
+              },
+            ),
           ),
           title: Text(
             product.title,
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(product);
+              print(cart.itemCount);
+            },
             icon: Icon(Icons.shopping_cart),
             color: Theme.of(context).accentColor,
           ),
