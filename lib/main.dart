@@ -4,10 +4,13 @@ import 'package:shop/providers/cart.dart';
 
 import './views/products_overview_screen.dart';
 import './views/cart_screen.dart';
-import './utils/app_routes.dart';
+import './views/orders_screen.dart';
 import './views/product_detail_screen.dart';
+
 import './providers/products.dart';
 import './providers/orders.dart';
+
+import './utils/app_routes.dart';
 
 void main() => runApp(MyApp());
 
@@ -33,10 +36,12 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
         ),
-        home: ProductOverviewScreen(),
+        // home: ProductOverviewScreen(),
         routes: {
+          AppRoutes.HOME: (ctx) => ProductOverviewScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
+          AppRoutes.ORDERS: (ctx) => OrdersScreen(),
         },
       ),
     );
