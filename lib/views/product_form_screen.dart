@@ -92,9 +92,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     });
 
     final products = Provider.of<Products>(context, listen: false);
-    if (_formData['id'] == null) {
       try {
-        await products.addProduct(product);
+        if (_formData['id'] == null) {
+          await products.addProduct(product);
+        } else {
+          await products.updateProduct(product);
+        }
         Navigator.of(context).pop();
       } catch(error) {
         await showDialog<Null>(
@@ -117,13 +120,6 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           _isLoading = false;
         });    
       }
-    } else {
-      products.updateProduct(product);
-      setState(() {
-        _isLoading = true;
-      });
-      Navigator.of(context).pop();
-    }
   }
 
   Widget build(BuildContext context) {
