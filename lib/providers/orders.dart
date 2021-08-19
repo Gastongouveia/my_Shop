@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+import 'package:shop/utils/constants.dart';
 
 import './cart.dart';
 
@@ -21,7 +22,12 @@ class Order {
 
 class Orders with ChangeNotifier {
   final String _baseUrl =
-      'https://flutter-shop-b6df4-default-rtdb.firebaseio.com/orders';
+      '${Constants.BASE_API_URL}/orders';
+
+  String? _token;
+  String? _userId;
+
+  Orders([this._token, this._userId, this._items = const []]);
 
   List<Order> _items = [];
 
@@ -35,7 +41,7 @@ class Orders with ChangeNotifier {
 
   Future<void> loadOrders() async {
     List<Order> loadedItems = [];
-    final response = await get(Uri.parse("$_baseUrl.json"));
+    final response = await get(Uri.parse("$_baseUrl/$_userId.json?auth=$_token"));
     Map<String, dynamic>? data = json.decode(response.body);
 
     if (data != null) {
@@ -65,7 +71,7 @@ class Orders with ChangeNotifier {
     final date = DateTime.now();
     final response = await post(
       Uri.parse(
-        "$_baseUrl.json",
+        "$_baseUrl/$_userId.json?auth=$_token",
       ),
       body: json.encode({
         'total': cart.totalAmount,
